@@ -1,6 +1,6 @@
 import React from "react"
 import Task from "../Task/Task"
-import idGenerator from "../../../Tools"
+import idGenerator from "../../Tools"
 import NewTask from "../NewTask/NewTask"
 import classes from "./todo.css";
 
