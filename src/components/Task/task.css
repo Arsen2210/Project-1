@@ -1,0 +1,43 @@
+.taskDiv{
+    border: solid rgb(3, 0, 177) 5px;
+    margin:10px 10px 10px 10px;
+    padding-left: 5px;
+  }
+.delButton{
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 5px 15px 5px 15px;
+}
+.newInput{
+  width: 150px;
+  height: 22px;
+}
+.newSave{
+  margin:10px 10px 10px 10px;
+  padding: 5px 15px 5px 15px;
+}
+.newEdit{
+  margin:10px 10px 10px 10px;
+  padding: 5px 15px 5px 15px;
+}
+.newCancel{
+  margin:10px 10px 10px 10px;
+  padding: 5px 15px 5px 15px;
+}
+.newCancel:hover{
+  background-color: blue;
+  color: white;
+}
+.newSave:hover{
+  background-color: blue;
+  color: white;
+}
+
+.delButton:hover{
+  background-color: blue;
+  color: white;
+}
+.newEdit:hover{
+  background-color: blue;
+  color: white;
+}
