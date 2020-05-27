@@ -16,12 +16,16 @@ export default class NewTask extends React.Component {
         this.setState({ inputText: " " });
     }
     render() {
+        const {disabled}=this.props
         return (
             <>
-                <input className={classes.Input} type="text"
+                <input
+                    disabled={disabled}
+                    className={classes.Input} 
+                    type="text"
                     value={this.state.inputText}
                     onChange={this.inputChangeHandler} />
-                <button className={classes.newAdd} onClick={this.buttonClickhandler}>Add</button>
+                <button disabled={disabled} className={classes.newAdd} onClick={this.buttonClickhandler}>Add</button>
             </>
         );
     }

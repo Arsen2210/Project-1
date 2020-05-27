@@ -16,6 +16,7 @@ export default class Task extends React.Component {
         this.setState({
             isEdit: true,
         })
+        this.props.onEdit();
     }
 
     handleInputChange = (event) => {
@@ -25,11 +26,10 @@ export default class Task extends React.Component {
     }
 
     saveEdit = () => {
-        this.props.onEdit(this.state.editText);
+        this.props.onSaveEdit(this.state.editText);
         this.setState({
             isEdit: false,
         })
-
     }
 
     cancelEdit = () => {
@@ -37,6 +37,7 @@ export default class Task extends React.Component {
             isEdit: false,
             editText: this.props.text
         })
+        this.props.onEdit()
     }
 
     render() {

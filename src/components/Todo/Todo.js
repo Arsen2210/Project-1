@@ -8,7 +8,8 @@ export default class Todo extends React.Component {
 
     state = {
         tasks: [],
-        taskIds: new Set()
+        taskIds: new Set(),
+        isEditing: false
     }
 
     addTask = (inputText) => {
@@ -53,15 +54,22 @@ export default class Todo extends React.Component {
         })
     }
 
-    handleEdit = (id) => (text) => {
+    handleSaveEdit = (id) => (text) => {
         const tasks = JSON.parse(JSON.stringify(this.state.tasks));
-        for (let task of tasks) {
+
+        for (let task of tasks) { 
             if (task.id === id) {
                 task.text = text
                 break
             }
         }
-        this.setState({ tasks })
+        this.setState({ tasks,isEditing:false})
+    }
+
+    handleEdit = () => {
+        this.setState({
+            isEditing:!this.state.isEditing,
+        });
     }
 
     render() {
@@ -72,14 +80,16 @@ export default class Todo extends React.Component {
                     text={text}
                     onDelete={this.removeButtonHandler(id)}
                     onCheck={this.handleCheck(id)}
-                    onEdit={this.handleEdit(id)}
+                    onSaveEdit={this.handleSaveEdit(id)}
+                    onEdit={this.handleEdit}
                 />);
         });
         return (
             <>
                 <div>
                     <NewTask
-                        onTaskAdd={this.addTask} />
+                        onTaskAdd={this.addTask}
+                        disabled = {this.state.isEditing}/>
                 </div>
                 <div className={classes.tasksDiv}>
                     {tasks}
