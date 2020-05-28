@@ -1,5 +1,5 @@
 import React from "react";
-import classes from "./task.css";
+import classes from "./task.module.css";
 // import { render } from "@testing-library/react";
 
 export default class Task extends React.Component {

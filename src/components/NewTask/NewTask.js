@@ -1,5 +1,5 @@
 import React from "react";
-import classes from "./newtask.css";
+import classes from "./newtask.module.css";
 /* import Task from "./Task"; */
 
 export default class NewTask extends React.Component {

@@ -2,7 +2,7 @@ import React from "react"
 import Task from "../Task/Task"
 import idGenerator from "../../Tools"
 import NewTask from "../NewTask/NewTask"
-import classes from "./todo.css";
+import classes from "./todo.module.css";
 
 export default class Todo extends React.Component {
 
@@ -96,7 +96,7 @@ export default class Todo extends React.Component {
                     <button
                         className={classes.buttonRemoveAll}
                         onClick={this.removeBulkHandler}
-                        disabled={!this.state.taskIds.size}
+                        disabled={!this.state.taskIds.size || this.state.isEditing}
                     >Remove All</button>
                 </div>
             </>
