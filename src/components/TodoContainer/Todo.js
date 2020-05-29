@@ -131,7 +131,7 @@ export default class Todo extends React.Component {
                         className={classes.buttonSelectAll}
                         variant='danger'
                         onClick={this.selectBulkHandler}
-                        disabled={!this.state.tasks.length || this.state.isEditing}>
+                        disabled={!(this.state.tasks.length>=2) || this.state.isEditing}>
                         SelectAll
                     </Button>
                 </Row>

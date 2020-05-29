@@ -14,7 +14,7 @@ export default class NewTask extends React.Component {
         const { inputText } = this.state;
         if (!inputText) return;
         this.props.onTaskAdd(inputText);
-        this.setState({ inputText: " " });
+        this.setState({ inputText: "" });
     }
     render() {
         const {disabled}=this.props
@@ -32,7 +32,7 @@ export default class NewTask extends React.Component {
             <InputGroup.Append>
               <Button 
               variant="outline-primary"
-              disabled = {disabled}
+              disabled = {disabled || !this.state.inputText.length}
               onClick={this.buttonClickHandler}
               >
               Add
