@@ -1,8 +1,14 @@
 import React from "react"
-import Task from "../Task/Task"
+import Task from "../TaskContainer/Task"
 import idGenerator from "../../Tools"
-import NewTask from "../NewTask/NewTask"
+import NewTask from "../NewTaskContainer/NewTask"
 import classes from "./todo.module.css";
+import {
+    Container,
+    Row,
+    Col,
+    Button
+} from 'react-bootstrap';
 
 export default class Todo extends React.Component {
 
@@ -57,21 +63,33 @@ export default class Todo extends React.Component {
     handleSaveEdit = (id) => (text) => {
         const tasks = JSON.parse(JSON.stringify(this.state.tasks));
 
-        for (let task of tasks) { 
+        for (let task of tasks) {
             if (task.id === id) {
                 task.text = text
                 break
             }
         }
-        this.setState({ tasks,isEditing:false})
+        this.setState({ tasks, isEditing: false })
     }
 
     handleEdit = () => {
         this.setState({
-            isEditing:!this.state.isEditing,
+            isEditing: !this.state.isEditing,
         });
     }
+    selectBulkHandler=()=>{
+        const {tasks}=this.state
+        const {taskIds}=this.state
+        tasks.forEach(elem => {
+            taskIds.add(elem.id);
+        });
+        this.setState({
+            tasks:tasks,
+            taskIds: taskIds
+        });
 
+
+    }
     render() {
         const tasks = this.state.tasks.map(({ id, text }) => {
             return (
@@ -86,20 +104,39 @@ export default class Todo extends React.Component {
         });
         return (
             <>
-                <div>
-                    <NewTask
-                        onTaskAdd={this.addTask}
-                        disabled = {this.state.isEditing}/>
-                </div>
-                <div className={classes.tasksDiv}>
+            <Container className={classes.Container}>
+                <Row className={classes.inputRow}>
+                    <Col>
+                        <NewTask
+                            onTaskAdd={this.addTask}
+                            disabled={this.state.isEditing}
+                        />
+                    </Col>
+                </Row>
+
+
+                <Row>
                     {tasks}
-                    <button
+                </Row>
+
+                <Row>
+                    <Button
                         className={classes.buttonRemoveAll}
+                        variant='danger'
                         onClick={this.removeBulkHandler}
-                        disabled={!this.state.taskIds.size || this.state.isEditing}
-                    >Remove All</button>
-                </div>
-            </>
+                        disabled={!this.state.taskIds.size || this.state.isEditing}>
+                        Remove
+                    </Button>
+                    <Button
+                        className={classes.buttonSelectAll}
+                        variant='danger'
+                        onClick={this.selectBulkHandler}
+                        disabled={!this.state.tasks.length || this.state.isEditing}>
+                        SelectAll
+                    </Button>
+                </Row>
+            </Container>
+        </>
         );
     }
 }
