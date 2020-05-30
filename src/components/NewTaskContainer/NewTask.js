@@ -16,6 +16,12 @@ export default class NewTask extends React.Component {
         this.props.onTaskAdd(inputText);
         this.setState({ inputText: "" });
     }
+    addKeydownHandler=(event)=>{
+      if(event.which===13){
+        this.buttonClickHandler()
+      }
+
+    }
     render() {
         const {disabled}=this.props
         return (
@@ -28,6 +34,7 @@ export default class NewTask extends React.Component {
               disabled = {disabled}
               value={this.state.inputText}
               onChange={this.inputChangeHandler}
+              onKeyPress={this.addKeydownHandler}
             />
             <InputGroup.Append>
               <Button 

@@ -42,6 +42,11 @@ export default class Task extends React.Component {
         })
         this.props.onEdit()
     }
+    saveEditKeydown=(event)=>{
+        if(event.key==="Enter"){
+            this.saveEdit()
+        }
+    }
     render() {
         const { text } = this.props
         const { isEdit } = this.state
@@ -69,12 +74,12 @@ export default class Task extends React.Component {
                                         className={classes.newInput}
                                         value={this.state.editText}
                                         onChange={this.handleInputChange}
+                                        onKeyPress={this.saveEditKeydown}
                                     />
                                 </InputGroup> :
-                                <p>{text}</p>
+                                <Card.Text>{text}</Card.Text>
                             }
                         </Card.Text>
-                        {/* <FontAwesomeIcon icon={faTrashAlt} /> */}
                         {isEdit ?
                             <>
                                 <Button className={classes.newSave} onClick={this.saveEdit} variant="outline-primary">Save</Button>
