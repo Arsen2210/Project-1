@@ -1,63 +1,80 @@
-import React from "react"
-import Task from "../TaskContainer/Task"
-import idGenerator from "../../Tools"
-import NewTask from "../NewTaskContainer/NewTask"
-import classes from "./todo.module.css";
+import React, { Component } from 'react';
+import classes from './todo.module.css';
+import  idGen  from '../../Tools/Tools';
+import Task from '../TaskContainer/Task';
+import NewTask from '../NewTaskContainer/NewTask';
 import {
     Container,
     Row,
     Col,
     Button
 } from 'react-bootstrap';
+import TaskModal from '../TaskModal/TaskModal';
 
-export default class Todo extends React.Component {
 
+class ToDo extends Component {
+    constructor(props) {
+        super(props);
+        console.log('ToDo constructor');
+    }
     state = {
         tasks: [],
         taskIds: new Set(),
-        isEditing: false
+        isEditing: false,
+        openModal: false,
+        currentTask: null
     }
+
+    componentDidMount() {
+        console.log('ToDo mounted');
+    }
+
 
     addTask = (inputText) => {
         const tasks = [...this.state.tasks];
         tasks.push({
-            id: idGenerator(),
+            id: idGen(),
             text: inputText
         });
         this.setState({ tasks });
     }
 
     removeButtonHandler = (taskId) => () => {
-        const newTask = this.state.tasks.filter(({ id }) => taskId !== id);
-        const newtaskIds = new Set(this.state.taskIds);
-        newtaskIds.delete(taskId);
+        const newTasks = this.state.tasks.filter(({ id }) => taskId !== id);
+        const newTaskIds = new Set(this.state.taskIds);
+        newTaskIds.delete(taskId);
 
         this.setState({
-            tasks: newTask,
-            taskIds: newtaskIds
+            tasks: newTasks,
+            taskIds: newTaskIds
         });
     }
 
     handleCheck = (taskId) => () => {
         let taskIds = new Set(this.state.taskIds);
+
         if (taskIds.has(taskId)) {
-            taskIds.delete(taskId)
+            taskIds.delete(taskId);
         }
         else {
             taskIds.add(taskId);
         }
-        this.setState({ taskIds })
+        this.setState({ taskIds });
     }
+
 
     removeBulkHandler = () => {
         let { tasks, taskIds } = this.state;
+
         taskIds.forEach(id => {
             tasks = tasks.filter(task => task.id !== id);
         });
+
         this.setState({
             tasks,
             taskIds: new Set()
-        })
+        });
+
     }
 
     handleSaveEdit = (id) => (text) => {
@@ -65,11 +82,11 @@ export default class Todo extends React.Component {
 
         for (let task of tasks) {
             if (task.id === id) {
-                task.text = text
-                break
+                task.text = text;
+                break;
             }
         }
-        this.setState({ tasks, isEditing: false })
+        this.setState({ tasks, isEditing: false });
     }
 
     handleEdit = () => {
@@ -77,66 +94,112 @@ export default class Todo extends React.Component {
             isEditing: !this.state.isEditing,
         });
     }
-    selectBulkHandler=()=>{
-        const {tasks}=this.state
-        const {taskIds}=this.state
-        tasks.forEach(elem => {
-            taskIds.add(elem.id);
-        });
+
+    selectAllHandler = ()=>{
+        const taskIds = this.state.tasks.map(task => task.id);
+        this.setState({taskIds: new Set(taskIds)});
+    };
+
+    deSelectAllHandler = ()=>{
+        this.setState({taskIds: new Set()});
+    };
+
+    handleModalClose = ()=>{
         this.setState({
-            tasks:tasks,
-            taskIds: taskIds
+            openModal: false,
+            currentTask: null
         });
-
-
     }
-    render() {
-        const tasks = this.state.tasks.map(({ id, text }) => {
-            return (
-                <Task
-                    key={id}
-                    text={text}
-                    onDelete={this.removeButtonHandler(id)}
-                    onCheck={this.handleCheck(id)}
-                    onSaveEdit={this.handleSaveEdit(id)}
-                    onEdit={this.handleEdit}
-                />);
+
+    handleModalOpen  = (task)=> ()=> {
+        console.log(task)
+        this.setState({
+            openModal: true,
+            currentTask: task
         });
-        return (
-            <>
-            <Container className={classes.Container}>
-                <Row className={classes.inputRow}>
-                    <Col>
-                        <NewTask
-                            onTaskAdd={this.addTask}
-                            disabled={this.state.isEditing}
+    }
+
+    render() {
+        // console.log('ToDo render');
+      const {tasks, taskIds, isEditing, currentTask} = this.state;
+
+        const tasksArr = tasks.map((task) => {
+                return (
+                    <Col key={task.id} sm='6' md='4' lg='3' xl='2' >
+                        <Task
+                            text={task.text}
+                            onDelete={this.removeButtonHandler(task.id)}
+                            onCheck={this.handleCheck(task.id)}
+                            onSaveEdit={this.handleSaveEdit(task.id)}
+                            onEdit={this.handleEdit}
+                            isSelected = {this.state.taskIds.has(task.id)}
+                            onOpenModal = {this.handleModalOpen(task)}
                         />
                     </Col>
-                </Row>
+                )
+            }
+
+            );
+
+        return (
+            <>
+                <Container className={classes.container}>
+                    <Row className={classes.inputRow}>
+                        <Col>
+                            <NewTask
+                                onTaskAdd={this.addTask}
+                                disabled={isEditing}
+                            />
+                        </Col>
+                    </Row>
 
 
-                <Row>
-                    {tasks}
-                </Row>
+                    <Row>
+                        {tasksArr}
+                    </Row>
 
-                <Row>
-                    <Button
-                        className={classes.buttonRemoveAll}
-                        variant='danger'
-                        onClick={this.removeBulkHandler}
-                        disabled={!this.state.taskIds.size || this.state.isEditing}>
-                        Remove
-                    </Button>
-                    <Button
-                        className={classes.buttonSelectAll}
-                        variant='danger'
-                        onClick={this.selectBulkHandler}
-                        disabled={!(this.state.tasks.length>=2) || this.state.isEditing}>
-                        SelectAll
-                    </Button>
-                </Row>
-            </Container>
-        </>
+                    <Row className={classes.footerRow}>
+                        <Button
+                            className='mx-auto'
+                            variant='danger'
+                            onClick={this.removeBulkHandler}
+                            disabled={!taskIds.size}
+                        >
+                            Remove
+                         </Button>
+                        {
+                            tasks.length !== taskIds.size &&
+                            <Button
+                            className='mx-auto'
+                            variant='secondary'
+                            onClick={this.selectAllHandler}
+                        >
+                            Select all
+                         </Button>
+                         
+                        }
+
+                        { !!taskIds.size &&
+                            <Button
+                            className='mx-auto'
+                            variant='secondary'
+                            onClick={this.deSelectAllHandler}
+                        >
+                            Deselect all
+                         </Button>
+                        }
+                    </Row>
+                </Container>
+             { currentTask &&  
+                <TaskModal
+                show = {this.state.openModal}
+                onHide = {this.handleModalClose}
+                taskData = {currentTask}
+                />
+            }
+            </>
         );
     }
 }
+
+export default ToDo;

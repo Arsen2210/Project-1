@@ -1,27 +1,19 @@
 
-.delButton{
-    margin-left: 10px;
-    margin-right: 10px;
-    padding: 5px 15px 5px 15px;
+.taskBlock{
+  display: inline-block;
+  margin: 20px;
+  padding: 5px;
+  border: 1px solid #000;
+  border-radius: 5px;
 }
-.newInput{
-  width: 150px;
-  height: 22px;
+.taskBlock > input{
+
 }
-.newSave{
-  margin:10px 10px 10px 10px;
-  padding: 5px 15px 5px 15px;
+
+.block {
+  color: red;
 }
-.newEdit{
-  margin:10px 10px 10px 10px;
-  padding: 5px 15px 5px 15px;
-}
-.newCancel{
-  margin:10px 10px 10px 10px;
-  padding: 5px 15px 5px 15px;
-}
-.CardForm{
-  width:280px;
-  margin-left: 20px;
-  margin-bottom: 20px;
+
+.text {
+  font-size: 15px;
 }

@@ -1,34 +1,9 @@
-/* .tasksDiv{
-    display: flex;
-    flex-wrap: wrap;
-}
-.buttonRemoveAll{
-    margin:10px 10px 10px 10px;
-    padding: 5px 15px 5px 15px;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.buttonRemoveAll:hover{
-    background-color: blue;
-    color: white;
-} */
 .inputRow{
     margin-top: 50px;
 }
-.buttonRemoveAll{
-    padding: 12px 30px 12px 30px;
-    margin: auto;
-    margin-top:40px;
+.footerRow{
+    margin-top: 20px;
 }
-.buttonSelectAll{
-    padding: 0px 30px 0px 30px;
-    margin: auto;
-    margin-top:40px;
-    height:50px;
+.container{
+    padding-bottom:20px ;
 }
-.Container{
-    margin:auto;
-    padding-bottom: 40px;
-  }

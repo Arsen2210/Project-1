@@ -1,29 +1,24 @@
-import React from "react";
-// import classes from "./newtask.module.css";
+import React, { Component } from 'react';
 import {Button, InputGroup, FormControl} from 'react-bootstrap';
-/* import Task from "./Task"; */
 
-export default class NewTask extends React.Component {
-    state = {
-        inputText: ""
-    }
-    inputChangeHandler = (event) => {
-        this.setState({ inputText: event.target.value });
-    }
-    buttonClickHandler = () => {
-        const { inputText } = this.state;
-        if (!inputText) return;
-        this.props.onTaskAdd(inputText);
-        this.setState({ inputText: "" });
-    }
-    addKeydownHandler=(event)=>{
-      if(event.which===13){
-        this.buttonClickHandler()
-      }
+class NewTask extends Component {
+state = {
+    inputText: ''
+}
 
-    }
+inputChangeHandler = (event)=>{
+    this.setState({inputText: event.target.value});
+}
+
+buttonClickHandler = ()=>{
+  const {inputText} = this.state;
+  if (!inputText) return;
+  this.props.onTaskAdd(inputText);
+  this.setState({inputText: ''});
+}
+
     render() {
-        const {disabled}=this.props
+        const {disabled} = this.props;
         return (
             <>
             <InputGroup className="mb-3">
@@ -34,12 +29,11 @@ export default class NewTask extends React.Component {
               disabled = {disabled}
               value={this.state.inputText}
               onChange={this.inputChangeHandler}
-              onKeyPress={this.addKeydownHandler}
             />
             <InputGroup.Append>
               <Button 
               variant="outline-primary"
-              disabled = {disabled || !this.state.inputText.length}
+              disabled = {disabled}
               onClick={this.buttonClickHandler}
               >
               Add
@@ -49,5 +43,6 @@ export default class NewTask extends React.Component {
             </>
         );
     }
-
 }
+
+export default NewTask;
