@@ -1,11 +1,43 @@
 import React from 'react';
 import {Modal, Button} from 'react-bootstrap';
+import EditTask from '../EditTask';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrashAlt, faEdit} from '@fortawesome/free-solid-svg-icons';
 
-function TaskModal(props) {
-const {taskData} = props;
+class TaskModal extends React.Component{
+state = {
+  isEdit: false
+}
+
+
+handleEdit = () => {
+  this.setState({
+    isEdit: true
+  });
+  this.props.onEdit();
+}
+
+saveEdit = (editedText) => {
+  this.props.onSaveEdit(editedText);
+  this.setState({
+    isEdit: false,
+  });
+}
+
+cancelEdit = () => {
+  this.setState({
+    isEdit: false,
+  });
+  this.props.onEdit();
+}
+
+render(){
+  const {taskData} = this.props;
+
         return (
             <Modal
-            {...props}
+            show = {this.props.show}
+            onHide = {this.props.onHide}
             size="lg"
             aria-labelledby="contained-modal-title-vcenter"
             centered
@@ -16,16 +48,30 @@ const {taskData} = props;
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <h4>{taskData.text.slice(0, 6)}</h4>
+              <h4>Centered Modal</h4>
               <p>
                 {taskData.text}
               </p>
+              {
+                this.state.isEdit ?
+                <EditTask
+              text = {taskData.text}
+              onCancelEdit = {this.cancelEdit}
+              onSaveEdit = {this.saveEdit}
+              />
+              :  <>
+              <FontAwesomeIcon icon={faEdit} onClick={this.handleEdit} />
+              <FontAwesomeIcon icon={faTrashAlt} onClick={this.props.onDelete} />
+              </>
+              }
+
             </Modal.Body>
             <Modal.Footer>
-              <Button onClick={props.onHide}>Close</Button>
+              <Button onClick={this.props.onHide}>Close</Button>
             </Modal.Footer>
           </Modal>
         );
+}
 
 }
 
