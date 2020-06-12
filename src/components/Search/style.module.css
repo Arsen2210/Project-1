@@ -1,0 +1,12 @@
+.active {
+    background-color:#007bff;
+    }
+.sortItem:hover {
+    background-color:#007bff;
+}
+.navButton{
+    margin-left: 20px;
+}
+.navbar{
+    margin-bottom:40px;
+}

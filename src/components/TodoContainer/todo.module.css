@@ -1,9 +1,9 @@
-.inputRow{
-    margin-top: 50px;
-}
 .footerRow{
     margin-top: 20px;
 }
 .container{
     padding-bottom:20px ;
+}
+.addButton{
+ margin-bottom:40px ;
 }

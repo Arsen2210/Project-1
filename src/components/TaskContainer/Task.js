@@ -3,59 +3,19 @@ import { Card, Button} from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashAlt, faEdit} from '@fortawesome/free-solid-svg-icons';
 import EditTask from '../EditTask';
+import {formatDate} from '../../Tools/Tools';
+import classes from './task.module.css';
 
 export default class Task extends React.PureComponent {
   constructor(props) {
     super(props);
-    // console.log('Task constructor');
     this.state = {
       isEdit: false
     }
   }
 
 
-  componentDidMount() {
-    // console.log('Task mounted');
-  }
-
-/*   componentDidUpdate(prevProps, prevState) {
-    // console.log('Task updated');
-    // console.log('prevProps', prevProps);
-    // console.log('this.props', this.props);
-  } */
-
-  /*       shouldComponentUpdate(prevProps, prevState){
-        return prevProps.text !== this.props.text;
-        
-       } */
-
- /*  componentWillUnmount() {
-    console.log('Task unmounted');
-  } */
-
-  handleEdit = () => {
-    this.setState({
-      isEdit: true
-    });
-    this.props.onEdit();
-  }
-
-  cancelEdit = () => {
-    this.setState({
-      isEdit: false,
-    });
-    this.props.onEdit();
-  }
-
-  saveEdit = (editedText) => {
-    this.props.onSaveEdit(editedText);
-    this.setState({
-      isEdit: false,
-    });
-  }
-
   render() {
-    // console.log('Task render');
     const { data } = this.props;
     const { isEdit } = this.state;
 
@@ -70,9 +30,15 @@ export default class Task extends React.PureComponent {
         </Card.Header>
         <Card.Body>
           <Card.Title>{data.title}</Card.Title>
-          <Card.Text>
+          <Card.Text >
             {data.description}
           </Card.Text>
+          <Card.Text className={classes.date}>
+          Creation date {formatDate(data.created_at)}
+        </Card.Text>
+        <Card.Text className={classes.date}>
+        Completion date {formatDate(data.date)}
+      </Card.Text>
           {
             isEdit ?
             <EditTask
@@ -82,14 +48,15 @@ export default class Task extends React.PureComponent {
             />           
             :
               <>
-                <FontAwesomeIcon icon={faEdit} onClick={this.handleEdit} />
+                <FontAwesomeIcon icon={faEdit} onClick={()=>this.props.onEdit(data.id)} />
                 <FontAwesomeIcon icon={faTrashAlt} onClick={this.props.onDelete} />
                 <p>
                 <Button 
                 variant="primary" 
                 onClick = {this.props.onOpenModal}
                 >
-                View</Button>
+                View
+                </Button>
                 </p>
               </>
           }

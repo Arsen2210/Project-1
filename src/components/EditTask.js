@@ -45,7 +45,6 @@ class EditTask extends Component{
                 <FontAwesomeIcon icon={faWindowClose} onClick={this.cancelEdit} />
               </InputGroup.Text>
             </InputGroup.Append>
-            
           </InputGroup>
         );
     }

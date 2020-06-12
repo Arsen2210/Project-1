@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import classes from './todo.module.css';
-import idGen  from '../../Tools/Tools';
 import Task from '../TaskContainer/Task';
-import AddModal from "../AddModal/AddModal"
+import Search from '../Search/Search';
+import { withSnackbar } from 'notistack';
+
 import {
     Container,
     Row,
@@ -10,15 +10,19 @@ import {
     Button
 } from 'react-bootstrap';
 import TaskModal from '../TaskModal/TaskModal';
-
+import Modal from '../Modal';
+import classes from './todo.module.css';
 
 class ToDo extends Component {
+
     state = {
         tasks: [],
         taskIds: new Set(),
         isEditing: false,
         taskIndex: null,
-        isAdding:false
+        editTaskIndex: null,
+        showAddTaskModal: false,
+        showEditTaskModal: false
     }
 
     componentDidMount() {
@@ -26,45 +30,81 @@ class ToDo extends Component {
             method: 'GET',
         })
             .then(res => res.json())
-            .then(data => {
+            .then((data)=>{
+                if(data.error){
+                    throw data.error;
+                }
                 this.setState({ tasks: data });
             })
             .catch(error => {
-                console.log('error', error);
-            });
+                this.props.enqueueSnackbar(error.toString(), { 
+                    variant: 'error',
+                });
+            });      
     }
 
-    isAdding=()=>{
-        this.setState({
-            isAdding:true
-        })
-    }
-
-
-    addTask = (taskTitle,taskDiscription) => {
-        const data = {
-            title: taskTitle,
-            description: taskDiscription,
-        }
-
+    addTask = (taskData) => {
         fetch('http://localhost:3001/tasks', {
             method: 'POST',
-            body: JSON.stringify(data),
+            body: JSON.stringify(taskData),
             headers: {
                 'Content-Type': 'application/json'
             }
         })
-        .then(res => res.json())
-        .then(data => {
-            this.setState({ tasks: [...this.state.tasks, data] });
-        })
-        .catch(error => {
-            console.log('error', error);
-        });
-
+            .then(res => res.json())
+            .then(response => {
+                if(response.error){
+                    throw response.error;
+                }
+                this.props.enqueueSnackbar('Task added successfully', { 
+                    variant: 'success',
+                });
+                this.setState({
+                    tasks: [...this.state.tasks, response],
+                    showAddTaskModal: false
+                });
+            })
+            .catch(error => {
+                this.props.enqueueSnackbar(error.toString(), { 
+                    variant: 'error',
+                });
+            });
     }
 
     removeButtonHandler = (taskId) => () => {
+        fetch(`http://localhost:3001/tasks/${taskId}`, {
+            method: 'Delete',
+        })
+        .then(res => res.json())
+        .then(response => {
+            if(response.error){
+                throw response.error;
+            }
+            if(response.success){
+                this.props.enqueueSnackbar('Task edited successfully', { 
+                    variant: 'success',
+                });
+            }
+            else {
+                throw new Error('Something went wrong, please, try again later!');
+            }
+            
+
+            const tasks = [...this.state.tasks];
+            const taskIndex = tasks.findIndex(task => task.id === response.id);
+            tasks[taskIndex] = response;
+            this.setState({
+                tasks,
+                showEditTaskModal: false
+            });
+        })
+        .catch(error => {
+            this.props.enqueueSnackbar(error.toString(), { 
+                variant: 'error',
+            });
+        });
+
+
         const newTasks = this.state.tasks.filter(({ id }) => taskId !== id);
         const newTaskIds = new Set(this.state.taskIds);
         newTaskIds.delete(taskId);
@@ -91,7 +131,27 @@ class ToDo extends Component {
 
     removeBulkHandler = () => {
         let { tasks, taskIds } = this.state;
-
+        const SelectedtaskIds = Array.from(taskIds)
+        SelectedtaskIds.forEach(element => { 
+            fetch(`http://localhost:3001/tasks/${element}`, {
+            method: 'Delete',
+        })
+        .then(res => res.json())
+        .then(response => {
+            if (response.error) {
+                throw response.error;
+            }
+            if (response.success) {
+                this.props.enqueueSnackbar('Task deleted successfully', {
+                    variant: 'success',
+                });
+            }
+            else {
+                throw new Error('Something went wrong, please, try again later!');
+            }
+        })
+        });
+        
         taskIds.forEach(id => {
             tasks = tasks.filter(task => task.id !== id);
         });
@@ -115,9 +175,10 @@ class ToDo extends Component {
         this.setState({ tasks, isEditing: false });
     }
 
-    handleEdit = () => {
+    handleEdit = (taskId) => {
         this.setState({
-            isEditing: !this.state.isEditing,
+            showEditTaskModal: true,
+            editTaskIndex: this.state.tasks.findIndex(el=> el.id === taskId),
         });
     }
 
@@ -132,8 +193,7 @@ class ToDo extends Component {
 
     handleModalClose = () => {
         this.setState({
-            taskIndex: null,
-            isAdding:false
+            taskIndex: null
         });
     }
 
@@ -143,8 +203,69 @@ class ToDo extends Component {
         });
     }
 
+    toggleTaskModal = (type)=>() => {
+        this.setState({ [`show${type}TaskModal`]: !this.state[`show${type}TaskModal`] });
+    };
+
+    editTask = (taskId, taskData)=>{
+        fetch(`http://localhost:3001/tasks/${taskId}`, {
+            method: 'PUT',
+            body: JSON.stringify(taskData),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then(response => {
+            if(response.error){
+                throw response.error;
+            }
+            this.props.enqueueSnackbar('Task edited successfully', { 
+                variant: 'success',
+            });
+
+            const tasks = [...this.state.tasks];
+            const taskIndex = tasks.findIndex(task => task.id === response.id);
+            tasks[taskIndex] = response;
+            this.setState({
+                tasks,
+                showEditTaskModal: false
+            });
+        })
+        .catch(error => {
+            this.props.enqueueSnackbar(error.toString(), { 
+                variant: 'error',
+            });
+        });
+    };
+
+
+    searchTasks = (data) =>{
+        let query = '';
+
+            for(let key in data){
+                query+= `${key}=${data[key]}&`
+            }
+
+        fetch(`http://localhost:3001/tasks?${query}`, {
+            method: 'GET',
+        })
+            .then(res => res.json())
+            .then((data)=>{
+                if(data.error){
+                    throw data.error;
+                }
+                this.setState({ tasks: data });
+            })
+            .catch(error => {
+                this.props.enqueueSnackbar(error.toString(), { 
+                    variant: 'error',
+                });
+            });
+    };
+
     render() {
-        const { tasks, taskIds, isEditing, taskIndex,isAdding } = this.state;
+        const { tasks, taskIds, taskIndex } = this.state;
 
         const tasksArr = tasks.map((task, index) => {
             return (
@@ -166,23 +287,28 @@ class ToDo extends Component {
 
         return (
             <>
-                <Container>
+                <Container fluid>
                     <Row className={classes.inputRow}>
                         <Col>
+                            <Search 
+                            onSubmit = {this.searchTasks}
+                            />
                             <Button
-                            className='mx-auto'
-                            variant='secondary'
-                            onClick={this.isAdding}
-                            disabled={isEditing}
+                                className={`mx-auto ${classes.addButton}`}
+                                variant='primary'
+                                onClick={this.toggleTaskModal('Add')}
                             >
                             Add task
-                         </Button>
+                            </Button>
                         </Col>
                     </Row>
 
 
-                    <Row>
-                        {tasksArr}
+                    <Row className={classes.addButton}>
+                        {tasksArr.length ? 
+                            tasksArr :
+                            <p>There are no tasks yet!</p>
+                        }
                     </Row>
 
                     <Row>
@@ -205,6 +331,7 @@ class ToDo extends Component {
                          </Button>
 
                         }
+
                         {!!taskIds.size &&
                             <Button
                                 className='mx-auto'
@@ -214,6 +341,9 @@ class ToDo extends Component {
                                 Deselect all
                          </Button>
                         }
+
+
+
                     </Row>
                 </Container>
                 {taskIndex !== null &&
@@ -226,16 +356,25 @@ class ToDo extends Component {
                         onEdit={this.handleEdit}
                     />
                 }
-                { isAdding &&
-                    <AddModal
-                        show={isAdding}
-                        onHide={this.handleModalClose}
-                        onTaskAdd={this.addTask}
-                    />
-                }
+
+                <Modal
+                    type = 'add'
+                    open={this.state.showAddTaskModal}
+                    onHide={this.toggleTaskModal('Add')}
+                    onAddTask={this.addTask}
+                />
+                <Modal
+                    type = 'edit'
+                    data = {tasks[this.state.editTaskIndex]}
+                    open={this.state.showEditTaskModal}
+                    onHide={this.toggleTaskModal('Edit')}
+                    onAddTask={this.addTask}
+                    onEditTask = {this.editTask}
+                />
+     
             </>
         );
     }
 }
 
-export default ToDo;
+export default withSnackbar(ToDo);
