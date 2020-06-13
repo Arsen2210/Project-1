@@ -1,12 +1,18 @@
 .active {
-    background-color:#007bff;
+    background-color:#d3d3d3;
     }
 .sortItem:hover {
-    background-color:#007bff;
+    background-color:#d3d3d3;
 }
 .navButton{
     margin-left: 20px;
 }
 .navbar{
     margin-bottom:40px;
+}
+.dataInput{
+    border-color:#d3d3d3;
+    color:#858585;
+    margin-left:20px;
+    border-radius: 10px;
 }

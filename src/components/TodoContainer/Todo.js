@@ -81,7 +81,7 @@ class ToDo extends Component {
                 throw response.error;
             }
             if(response.success){
-                this.props.enqueueSnackbar('Task edited successfully', { 
+                this.props.enqueueSnackbar('Task deleted successfully', { 
                     variant: 'success',
                 });
             }
@@ -132,34 +132,40 @@ class ToDo extends Component {
     removeBulkHandler = () => {
         let { tasks, taskIds } = this.state;
         const SelectedtaskIds = Array.from(taskIds)
+        let count=0;
         SelectedtaskIds.forEach(element => { 
             fetch(`http://localhost:3001/tasks/${element}`, {
             method: 'Delete',
         })
         .then(res => res.json())
         .then(response => {
-            if (response.error) {
+            if (response.error){
                 throw response.error;
             }
-            if (response.success) {
-                this.props.enqueueSnackbar('Task deleted successfully', {
+            if (response.success && count===SelectedtaskIds.length){
+                console.log(response.error && count===SelectedtaskIds.length)
+                this.props.enqueueSnackbar(`${SelectedtaskIds.length} ${SelectedtaskIds.length!==1?`tasks`:`task`} deleted successfully`, {
                     variant: 'success',
                 });
-            }
-            else {
-                throw new Error('Something went wrong, please, try again later!');
+                count=0;
+                taskIds.forEach(id => {
+                    tasks = tasks.filter(task => task.id !== id);
+                });
+        
+                this.setState({
+                    tasks,
+                    taskIds: new Set()
+                });
             }
         })
+        .catch(error => {
+            this.props.enqueueSnackbar(error.toString(), { 
+                variant: 'error',
+            });
+        });
+        count++
         });
         
-        taskIds.forEach(id => {
-            tasks = tasks.filter(task => task.id !== id);
-        });
-
-        this.setState({
-            tasks,
-            taskIds: new Set()
-        });
 
     }
 

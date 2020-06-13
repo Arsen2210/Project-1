@@ -121,11 +121,7 @@ class Search extends Component {
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="mr-auto">
-                            <SplitButton
-                                variant='outline-primary'
-                                title={sortTitle || 'Sort'}
-                                className={classes.navButton}
-                            >
+                            <NavDropdown className={classes.navButton} title={sortTitle || 'Sort'} id="basic-nav-dropdown">
                                 {this.sort.map(({ id, title }) =>
                                     <Dropdown.Item
                                         key={id}
@@ -135,12 +131,8 @@ class Search extends Component {
                                         {title}
                                     </Dropdown.Item>)
                                 }
-                            </SplitButton>
-                            <SplitButton
-                                variant='outline-primary'
-                                title={filterTitle || 'Filter'}
-                                className={classes.navButton}
-                            >
+                            </NavDropdown>
+                            <NavDropdown title={filterTitle || 'Filter'} className={classes.navButton} id="basic-nav-dropdown">
                                 {this.filter.map(({ id, title }) =>
                                     <Dropdown.Item
                                         key={id}
@@ -150,8 +142,9 @@ class Search extends Component {
                                         {title}
                                     </Dropdown.Item>)
                                 }
-                            </SplitButton>
-                            <Button variant="outline-primary"  className={classes.navButton} onClick={() => this.submitHandler('reset')}>Reset</Button>
+                            </NavDropdown>
+                            <input className={classes.dataInput} type="date" value={date} onChange={this.dateChangeHandler} />
+                            <Nav.Link className={classes.navButton} onClick={() => this.submitHandler('reset')}>Reset</Nav.Link>
                         </Nav>
                         <Form inline>
                             <FormControl type="text" placeholder="Search" className="mr-sm-2" value={search} onChange={this.inputChangeHandler} />
