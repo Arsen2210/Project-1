@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, InputGroup, FormControl, SplitButton, Dropdown, Form, NavDropdown, Navbar, Nav } from 'react-bootstrap';
+import { Button, FormControl, Dropdown, Form, NavDropdown, Navbar, Nav } from 'react-bootstrap';
 import classes from './style.module.css';
 import PropTypes from 'prop-types';
 
@@ -143,7 +143,7 @@ class Search extends Component {
                                     </Dropdown.Item>)
                                 }
                             </NavDropdown>
-                            <input className={classes.dataInput} type="date" value={date} onChange={this.dateChangeHandler} />
+                            <input disabled={!filterTitle} className={classes.dataInput} type="date" value={date} onChange={this.dateChangeHandler} />
                             <Nav.Link className={classes.navButton} onClick={() => this.submitHandler('reset')}>Reset</Nav.Link>
                         </Nav>
                         <Form inline>
