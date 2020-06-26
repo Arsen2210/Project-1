@@ -1,65 +1,31 @@
-import React, { Component } from 'react';
+import React, {useEffect} from 'react';
 import classes from './style.module.css';
-import { withSnackbar } from 'notistack';
 import {formatDate} from '../../../Tools/Tools';
 import { Button, Card, } from 'react-bootstrap';
+import {connect} from 'react-redux';
+import singelTaskGet from '../../../store/actions/singletask';
+import delTask from '../../../store/actions/deletetask';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 // import { faTrashAlt, faEdit} from '@fortawesome/free-solid-svg-icons';
 // import {formatDate} from '../../../Tools/Tools';
 
-class SingleTask extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            task: null,
-        }
-    }
+function SingleTask(props){
+    
+    useEffect(()=>{
+        const taskId=props.match.params.id;
+        props.singelTaskGet(taskId)
+    }, []);
 
-    componentDidMount() {
-        fetch(`http://localhost:3001/tasks/${this.props.match.params.id}`, {
-            method: 'GET',
-        })
-            .then(res => res.json())
-            .then((data) => {
-                if (data.error) {
-                    throw data.error;
-                }
-                this.setState({ task: data });
-            })
-            .catch(error => {
-                this.props.enqueueSnackbar(error.toString(), {
-                    variant: 'error',
-                });
-            });
 
-    }
-
-    deleteTask = () => {
-        const taskId = this.props.match.params.id;
-        fetch(`http://localhost:3001/tasks/${taskId}`, {
-            method: 'DELETE',
-        })
-            .then(res => res.json())
-            .then(response => {
-                if (response.error) {
-                    throw response.error;
-                }
-                this.props.history.push('/');
-            })
-            .catch(error => {
-                this.props.enqueueSnackbar(error.toString(), {
-                    variant: 'error',
-                });
-            });;
+    const deleteTask = () => {
+        const taskId = props.match.params.id;
+        props.delTask(taskId)
+        props.history.push('/')
     };
-
-    render() {
-        const { task } = this.state;
-        console.log(task)
-
+    const { singleTask } =props;
         return (
             <>
-                {task &&
+                {singleTask &&
                 <>
                     <h1 className={classes.heading}>Single task page</h1>
                     <Card>
@@ -67,23 +33,23 @@ class SingleTask extends Component {
 
                         </Card.Header>
                         <Card.Body>
-                            <Card.Title>{task.title}</Card.Title>
+                            <Card.Title>{singleTask.title}</Card.Title>
                             <Card.Text>
-                                {task.description}
+                                {singleTask.description}
                             </Card.Text>
                             <Card.Text className={classes.date}>
-                            Creation date {formatDate(task.created_at)}
+                            Creation date {formatDate(singleTask.created_at)}
                             </Card.Text>
                             <Card.Text className={classes.date}>
-                            Creation date {formatDate(task.date)}
+                            Creation date {formatDate(singleTask.date)}
                             </Card.Text>
 
                         </Card.Body>
                     </Card>
                     <Button
                         variant="danger"
-                        onClick={this.deleteTask}
-                        disabled={!task}
+                        onClick={deleteTask}
+                        disabled={!singleTask}
                     >
                         Delete task
                 </Button>
@@ -93,6 +59,17 @@ class SingleTask extends Component {
             </>
         );
     }
+const mapStateToProps=(state)=>{
+    return{
+        singleTask:state.singleTask
+    }
 }
 
-export default withSnackbar(SingleTask);
+const mapDispatchtoProps={
+    singelTaskGet,
+    delTask
+}
+
+
+
+export default connect(mapStateToProps,mapDispatchtoProps)(SingleTask);

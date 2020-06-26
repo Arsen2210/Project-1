@@ -1,24 +1,18 @@
 import * as actionTypes from '../actionTypes'
+import { request } from '../../Tools/request'
 
-export default function addTask(taskData){
+export default function addTask(taskData) {
     return (dispatch) => {
-        dispatch({type: actionTypes.ADD_TASK_REQUEST});
-        fetch('http://localhost:3001/tasks', {
-            method: 'POST',
-            body: JSON.stringify(taskData),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(res => res.json())
+        dispatch({ type: actionTypes.ADD_TASK_REQUEST });
+        request.post(`/tasks`,taskData)
             .then(response => {
                 if(response.error){
                     throw response.error;
                 }
-                dispatch({ type: actionTypes.ADD_TASK_SUCCESS, taskData: taskData }) 
+                dispatch({ type: actionTypes.ADD_TASK_SUCCESS, taskData: response })
             })
             .catch(error => {
-                dispatch({type: actionTypes.ADD_TASK_FAILURE, error: error.toString()});
+                dispatch({ type: actionTypes.ADD_TASK_FAILURE, error: error.toString() });
             });
-        }
+    }
 }

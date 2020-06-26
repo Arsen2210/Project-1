@@ -2,29 +2,20 @@ import React from 'react';
 import { Card, Button} from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashAlt, faEdit} from '@fortawesome/free-solid-svg-icons';
-import EditTask from '../EditTask';
 import {formatDate} from '../../Tools/Tools';
 import classes from './style.module.css';
 import {Link} from 'react-router-dom';
 
-export default class Task extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isEdit: false
-    }
-  }
-  render() {
-    const { data } = this.props;
-    const { isEdit } = this.state;
 
+function Task (props){
+    const { data } = props;
     return (
       <Card>
         <Card.Header>
           <input
             type="checkbox"
-            checked={this.props.isSelected}
-            onChange={this.props.onCheck}
+            checked={props.isSelected}
+            onChange={props.onCheck}
           />
         </Card.Header>
         <Card.Body>
@@ -38,21 +29,13 @@ export default class Task extends React.PureComponent {
         <Card.Text className={classes.date}>
         Completion date {formatDate(data.date)}
       </Card.Text>
-          {
-            isEdit ?
-            <EditTask
-            text = {this.props.text}
-            onCancelEdit = {this.cancelEdit}
-            onSaveEdit = {this.saveEdit}
-            />           
-            :
               <>
-                <FontAwesomeIcon icon={faEdit} onClick={()=>this.props.onEdit(data.id)} />
-                <FontAwesomeIcon icon={faTrashAlt} onClick={this.props.onDelete} />
+                <FontAwesomeIcon icon={faEdit} onClick={()=>props.onEdit(data.id)} />
+                <FontAwesomeIcon icon={faTrashAlt} onClick={props.onDelete} />
                 <p>
                 <Button 
                 variant="primary" 
-                onClick = {this.props.onOpenModal}
+                onClick = {props.onOpenModal}
                 >
                 Open in modal
                 </Button>
@@ -64,12 +47,11 @@ export default class Task extends React.PureComponent {
                 Open in separate page
                 </Button>
                 </Link>
-
                 </p>
               </>
-          }
         </Card.Body>
       </Card>
     );
   }
-}
+
+export default Task 

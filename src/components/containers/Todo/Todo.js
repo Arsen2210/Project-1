@@ -4,7 +4,10 @@ import Search from '../../Search/Search';
 import {connect} from 'react-redux';
 import getTasks from '../../../store/actions/gettasks';
 import addTask from '../../../store/actions/addtask';
-import editTask from '../../../store/actions/edittask'
+import editTask from '../../../store/actions/edittask';
+import delTask from '../../../store/actions/deletetask';
+import delBulk from '../../../store/actions/deletebulk';
+import searchTasks from '../../../store/actions/search';
 import {
     Container,
     Row,
@@ -45,48 +48,11 @@ class ToDo extends Component {
     }
 
     removeButtonHandler = (taskId) => () => {
-        fetch(`http://localhost:3001/tasks/${taskId}`, {
-            method: 'Delete',
-        })
-        .then(res => res.json())
-        .then(response => {
-            if(response.error){
-                throw response.error;
-            }
-            if(response.success){
-                this.props.enqueueSnackbar('Task deleted successfully', { 
-                    variant: 'success',
-                });
-            }
-            else {
-                throw new Error('Something went wrong, please, try again later!');
-            }
-            
-
-            const tasks = [...this.props.tasks];
-            const taskIndex = tasks.findIndex(task => task.id === response.id);
-            tasks[taskIndex] = response;
-            this.setState({
-                tasks,
-                showEditTaskModal: false
-            });
-        })
-        .catch(error => {
-            this.props.enqueueSnackbar(error.toString(), { 
-                variant: 'error',
-            });
-        });
-
-
-        const newTasks = this.props.tasks.filter(({ id }) => taskId !== id);
-        const newTaskIds = new Set(this.state.taskIds);
-        newTaskIds.delete(taskId);
-
         this.setState({
-            tasks: newTasks,
-            taskIds: newTaskIds,
-            taskIndex: null
+            showEditTaskModal: false,
+            taskIndex:null
         });
+        this.props.delTask(taskId);
     }
 
     handleCheck = (taskId) => () => {
@@ -103,47 +69,10 @@ class ToDo extends Component {
 
 
     removeBulkHandler = () => {
-        let { taskIds } = this.state;
+        const { taskIds } = this.state;
         const SelectedtaskIds = Array.from(taskIds);
-        fetch(`http://localhost:3001/tasks`, {
-            method: 'DELETE',
-            body: JSON.stringify({tasks: SelectedtaskIds}),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(res => res.json())
-        .then(response => {
-            console.log(response);
-            if(response.error){
-                throw response.error;
-            }
-            if(response.success){
-                this.props.enqueueSnackbar(`${SelectedtaskIds.length} ${SelectedtaskIds.length===1?'task':'tasks'} deleted successfully`, { 
-                    variant: 'success', 
-                });
-            }
-            else {
-                throw new Error('Something went wrong, please, try again later!');
-            }
-            
-            let tasks = [...this.state.tasks];
-            taskIds.forEach(id => {
-                tasks = tasks.filter(task => task.id !== id);
-            });
-    
-            this.setState({
-                tasks,
-                taskIds: new Set()
-            }); 
-        })
-        .catch(error => {
-            this.props.enqueueSnackbar(error.toString(), { 
-                variant: 'error',
-            });
-        });
-        
-
+        this.props.delBulk(SelectedtaskIds);
+        this.setState({taskIds: new Set()})
     }
 
     handleSaveEdit = (id) => (text) => {
@@ -166,7 +95,7 @@ class ToDo extends Component {
     }
 
     selectAllHandler = () => {
-        const taskIds = this.state.tasks.map(task => task.id);
+        const taskIds = this.props.tasks.map(task => task.id);
         this.setState({ taskIds: new Set(taskIds) });
     };
 
@@ -208,26 +137,12 @@ class ToDo extends Component {
         }
         
         this.props.history.push(`/?${query}`);
-        fetch(`http://localhost:3001/tasks?${query}`, {
-            method: 'GET',
-        })
-            .then(res => res.json())
-            .then((data)=>{
-                if(data.error){
-                    throw data.error;
-                }
-                this.setState({ tasks: data });
-            })
-            .catch(error => {
-                this.props.enqueueSnackbar(error.toString(), { 
-                    variant: 'error',
-                });
-            });
+        this.props.searchTasks(query)
     };
 
     render() {
         const {taskIds, taskIndex } = this.state;
-        const tasks=this.props.tasks
+        const tasks=this.props.tasks;
         const tasksArr = tasks.map((task, index) => {
             return (
                 <Col key={task.id} sm='6' md='4' lg='3' xl='2' >
@@ -311,8 +226,8 @@ class ToDo extends Component {
                         show={taskIndex !== null}
                         onHide={this.handleModalClose}
                         taskData={tasks[taskIndex]}
-                        onDelete={this.removeButtonHandler(tasks[taskIndex].id)}
                         onSaveEdit={this.handleSaveEdit(tasks[taskIndex].id)}
+                        onDelete={this.removeButtonHandler(tasks[taskIndex].id)}
                         onEdit={this.handleEdit}
                     />
                 }
@@ -346,7 +261,10 @@ const mapStateToProps=(state)=>{
 const mapDispatchtoProps={
     getTasks,
     addTask,
-    editTask
+    editTask,
+    delTask,
+    delBulk,
+    searchTasks
 }
 
 

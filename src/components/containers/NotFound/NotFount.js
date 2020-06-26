@@ -1,11 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 import classes from './style.module.css';
 
 
-class NotFound extends Component {
-
-
-    render() {
+function NotFound(){
         return (
             <div>
             <h1 className= {classes.heading}>Error 404</h1>
@@ -13,7 +10,6 @@ class NotFound extends Component {
             </div>
          
         );
-    }
 }
 
 export default NotFound;

@@ -13,14 +13,8 @@ import {connect} from 'react-redux';
 import {Route, Switch, Redirect} from 'react-router-dom';
 
 class App extends React.Component{
-  constructor(props){
-    super(props);
-    this.state = {
-      counter: 0
-    };
-}
 
- componentDidUpdate(prevProps){
+componentDidUpdate(prevProps){
   if(!prevProps.success && this.props.success){
     this.props.enqueueSnackbar(this.props.success, { 
       variant: 'success',
@@ -37,15 +31,7 @@ class App extends React.Component{
 
 }
 
-
-handleClick = ()=>{
-  this.setState({
-    counter: this.state.counter+1
-  });
-}
-
   render(){
-// console.log('App render starts', this.props);
 
   return (
     <div className={'App'}>
