@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
+import React,{PureComponent} from 'react';
 import { Button, FormControl, Dropdown, Form, NavDropdown, Navbar, Nav } from 'react-bootstrap';
 import classes from './style.module.css';
 import PropTypes from 'prop-types';
 
-class Search extends Component {
+
+class Search extends PureComponent {
     constructor(props) {
         super(props);
 
@@ -161,4 +162,4 @@ Search.propTypes = {
     onSubmit: PropTypes.func.isRequired
 };
 
-export default Search;
+export default React.memo(Search);

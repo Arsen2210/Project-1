@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashAlt, faEdit } from '@fortawesome/free-solid-svg-icons';
+import PropTypes from 'prop-types';
 
 function TaskModal(props) {
 
@@ -49,6 +50,13 @@ function TaskModal(props) {
   );
 }
 
+TaskModal.propTypes={
+  taskData:PropTypes.object.isRequired,
+  onEdit:PropTypes.func.isRequired,
+  onHide:PropTypes.func.isRequired,
+  onDelete:PropTypes.func.isRequired,
+  show:PropTypes.bool.isRequired
+}
 
 
-export default TaskModal;
+export default React.memo(TaskModal);

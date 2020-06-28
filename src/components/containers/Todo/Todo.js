@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import Task from '../../TaskContainer/Task';
 import Search from '../../Search/Search';
 import {connect} from 'react-redux';
@@ -8,6 +8,7 @@ import editTask from '../../../store/actions/edittask';
 import delTask from '../../../store/actions/deletetask';
 import delBulk from '../../../store/actions/deletebulk';
 import searchTasks from '../../../store/actions/search';
+import PropTypes from 'prop-types';
 import {
     Container,
     Row,
@@ -20,7 +21,7 @@ import classes from './todo.module.css';
 
 
 
-class ToDo extends Component {
+class ToDo extends PureComponent {
 
     state = {
         taskIds: new Set(),
@@ -145,7 +146,7 @@ class ToDo extends Component {
         const tasks=this.props.tasks;
         const tasksArr = tasks.map((task, index) => {
             return (
-                <Col key={task.id} sm='6' md='4' lg='3' xl='2' >
+                <Col className={classes.col} key={task.id} sm='6' md='4' lg='3' xl='3' >
                     <Task
                         data={task}
                         onDelete={this.removeButtonHandler(task.id)}
@@ -163,7 +164,7 @@ class ToDo extends Component {
 
         return (
             <>
-                <Container fluid>
+                <Container fluid >
                     <Row className={classes.inputRow}>
                         <Col>
                             <Search 
@@ -267,6 +268,18 @@ const mapDispatchtoProps={
     searchTasks
 }
 
+ToDo.propTypes={
+    tasks:PropTypes.array.isRequired,
+    editTask:PropTypes.func.isRequired,
+    getTasks:PropTypes.func.isRequired,
+    delTask:PropTypes.func.isRequired,
+    delBulk:PropTypes.func.isRequired,
+    searchTasks:PropTypes.func.isRequired,
+    addTask:PropTypes.func.isRequired
+}
 
 
-export default connect(mapStateToProps,mapDispatchtoProps)(ToDo);
+
+
+
+export default connect(mapStateToProps,mapDispatchtoProps)(React.memo(ToDo));

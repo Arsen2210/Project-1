@@ -1,8 +1,8 @@
-import React from 'react';
+import React,{PureComponent,memo} from 'react';
 import { Modal, Button, InputGroup, FormControl, Form } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
-class AddEditModal extends React.Component {
+class AddEditModal extends PureComponent{
 constructor(props){
     super(props);
         this.initialState = {
@@ -141,4 +141,4 @@ AddEditModal.propTypes = {
 };
 
 
-export default AddEditModal;
+export default memo(AddEditModal);

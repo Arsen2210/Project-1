@@ -1,12 +1,22 @@
 .ul>li{
-    display: inline-block;
     list-style-type: none;
-    text-align: left;
     margin: 10px;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 600;
+    color:white
+}
+.ul>li:hover{
+    color: white;
+}
+
+
+.ul{
+    display: flex;
+    justify-content: space-evenly;
 }
 
 .active{
-    color: darkorchid;
+    color:rgb(0, 0, 0);
 }
+
+

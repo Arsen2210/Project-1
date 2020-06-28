@@ -34,9 +34,8 @@ componentDidUpdate(prevProps){
   render(){
 
   return (
-    <div className={'App'}>
-    <NavMenu/>   
-
+    <div className={'App'}>  
+    <NavMenu/> 
     <Switch>
     <Route path='/' exact component={ToDo}/>
     <Route path='/about' exact component={About}/>
@@ -61,4 +60,4 @@ export default connect((state)=>{
     success: state.success,
     loading:  state.loading
     }
-})(withSnackbar(App));
+})(withSnackbar(React.memo(App)));

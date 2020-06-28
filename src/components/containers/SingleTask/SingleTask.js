@@ -5,6 +5,7 @@ import { Button, Card, } from 'react-bootstrap';
 import {connect} from 'react-redux';
 import singelTaskGet from '../../../store/actions/singletask';
 import delTask from '../../../store/actions/deletetask';
+import PropTypes from 'prop-types';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 // import { faTrashAlt, faEdit} from '@fortawesome/free-solid-svg-icons';
 // import {formatDate} from '../../../Tools/Tools';
@@ -50,6 +51,7 @@ function SingleTask(props){
                         variant="danger"
                         onClick={deleteTask}
                         disabled={!singleTask}
+                        className={classes.button}
                     >
                         Delete task
                 </Button>
@@ -71,5 +73,12 @@ const mapDispatchtoProps={
 }
 
 
+SingleTask.propTypes={
+    singleTask:PropTypes.object.isRequired,
+    singelTaskGet:PropTypes.func.isRequired,
+    delTask:PropTypes.func.isRequired,
+}
 
-export default connect(mapStateToProps,mapDispatchtoProps)(SingleTask);
+
+
+export default connect(mapStateToProps,mapDispatchtoProps)(React.memo(SingleTask));

@@ -1,3 +1,19 @@
 .inputRow{
     margin-top: 50px;
 }
+.submitButton{
+    margin-right: 20px;
+}
+
+.a{
+    color:white
+}
+
+a{
+    color:white
+}
+
+a:hover{
+    color:rgb(0, 0, 0);
+    text-decoration: none;
+}

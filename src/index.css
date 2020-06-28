@@ -1,0 +1,6 @@
+body{
+    margin:0;
+    background-image: linear-gradient(to  right, red,blue,orange);
+    user-select: none;
+}
+

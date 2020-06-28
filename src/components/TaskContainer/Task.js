@@ -5,12 +5,13 @@ import { faTrashAlt, faEdit} from '@fortawesome/free-solid-svg-icons';
 import {formatDate} from '../../Tools/Tools';
 import classes from './style.module.css';
 import {Link} from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 
 function Task (props){
     const { data } = props;
     return (
-      <Card>
+      <Card className={classes.card}>
         <Card.Header>
           <input
             type="checkbox"
@@ -30,28 +31,40 @@ function Task (props){
         Completion date {formatDate(data.date)}
       </Card.Text>
               <>
-                <FontAwesomeIcon icon={faEdit} onClick={()=>props.onEdit(data.id)} />
-                <FontAwesomeIcon icon={faTrashAlt} onClick={props.onDelete} />
-                <p>
-                <Button 
-                variant="primary" 
-                onClick = {props.onOpenModal}
-                >
-                Open in modal
-                </Button>
+                <FontAwesomeIcon className={classes.icon} icon={faEdit} onClick={()=>props.onEdit(data.id)} />
+                <FontAwesomeIcon  className={classes.icon} icon={faTrashAlt} onClick={props.onDelete} />
+                <div className={classes.div}>
+                  <Button 
+                  variant="success" 
+                  onClick = {props.onOpenModal}
+                  className={classes.button}
+                  >
+                  Open in modal
+                  </Button>
 
-                <Link to={`/task/${data.id}`}>
-                <Button 
-                variant="primary"
-                >
-                Open in separate page
-                </Button>
-                </Link>
-                </p>
+                  <Link to={`/task/${data.id}`}>
+                  <Button 
+                  className={classes.button}
+                  variant="warning"
+                  >
+                  Open in separate page
+                  </Button>
+                  </Link>
+                </div>
               </>
         </Card.Body>
       </Card>
     );
   }
 
-export default Task 
+Task.propTypes={
+  data:PropTypes.object.isRequired,
+  isSelected:PropTypes.bool.isRequired,
+  onCheck:PropTypes.func.isRequired,
+  onOpenModal:PropTypes.func.isRequired,
+  onDelete:PropTypes.func.isRequired,
+  onEdit:PropTypes.func.isRequired
+}
+
+
+export default React.memo(Task);

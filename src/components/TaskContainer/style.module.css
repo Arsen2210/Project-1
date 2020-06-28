@@ -13,3 +13,22 @@
 .text {
   font-size: 15px;
 }
+
+.div{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.button{
+  width: 200px;
+  margin-top: 20px;
+}
+
+.card{
+  border-radius: 30px;
+}
+
+.icon{
+  margin-right: 10px;
+  margin-left: 10px;
+}
