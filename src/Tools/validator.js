@@ -1,5 +1,5 @@
 function nameValidator(value){
-    const reg =/[A-ZԱ-ՖА-Я][a-zA-Zա-ֆԱ-ՖА-Яа-я][^1234567890#&<>"~;$^%{}?]{1,20}$/g ;
+    const reg =/[A-ZԱ-ՖА-Я][a-zA-Zա-ֆԱ-ՖА-Яа-я][^1234567890#&<>"~;$^%{}?]{0,20}$/g ;
     
     return reg.test(value);
 }

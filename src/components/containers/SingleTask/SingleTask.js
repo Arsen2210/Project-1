@@ -1,29 +1,52 @@
-import React, {useEffect} from 'react';
+import React  from 'react';
 import classes from './style.module.css';
-import {formatDate} from '../../../Tools/Tools';
+import { formatDate } from '../../../Tools/Tools';
 import { Button, Card, } from 'react-bootstrap';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import singelTaskGet from '../../../store/actions/singletask';
 import delTask from '../../../store/actions/deletetask';
+import SingleTaskEdit from '../../../store/actions/SingleTaskEdit'
 import PropTypes from 'prop-types';
+import Modal from '../../Modal'
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 // import { faTrashAlt, faEdit} from '@fortawesome/free-solid-svg-icons';
 // import {formatDate} from '../../../Tools/Tools';
 
-function SingleTask(props){
-    
-    useEffect(()=>{
-        const taskId=props.match.params.id;
-        props.singelTaskGet(taskId)
-    }, []);
+class SingleTask extends React.Component {
+    constructor(props){
+        super(props)
+        this.state = {
+            modal:false,
+        }
+    }
 
+    componentDidMount() {
+        const taskId = this.props.match.params.id;
+        this.props.singelTaskGet(taskId)
+    }
+    componentDidUpdate(prevProps){
+        return prevProps===this.props
+    }
 
-    const deleteTask = () => {
-        const taskId = props.match.params.id;
-        props.delTask(taskId)
-        props.history.push('/')
+    editTask=(id,data)=>{
+        this.props.SingleTaskEdit(id,data)
+        this.toggleModal()
+    }
+
+    toggleModal=()=>{
+        this.setState({
+            modal:!this.state.modal
+        })
+    }
+
+    deleteTask = () => {
+        const taskId = this.props.match.params.id;
+        this.props.delTask(taskId)
+        this.props.history.push('/')
     };
-    const { singleTask } =props;
+
+    render() {
+        const { singleTask } =this.props
         return (
             <>
                 {singleTask &&
@@ -49,36 +72,57 @@ function SingleTask(props){
                     </Card>
                     <Button
                         variant="danger"
-                        onClick={deleteTask}
+                        onClick={this.deleteTask}
                         disabled={!singleTask}
                         className={classes.button}
                     >
                         Delete task
                 </Button>
+                <Button
+                        variant="primary"
+                        onClick={this.toggleModal}
+                        disabled={!singleTask}
+                        className={classes.button}
+                    >
+                        EditTask
+                </Button>
                 </>
 
              }
+                <Modal
+                    type='edit'
+                    data={singleTask}
+                    open={this.state.modal}
+                    onHide={this.toggleModal}
+                    onEditTask={this.editTask}
+                />
             </>
         );
     }
-const mapStateToProps=(state)=>{
-    return{
-        singleTask:state.singleTask
+}
+
+
+
+const mapStateToProps = (state) => {
+    return {
+        singleTask: state.singleTask
     }
 }
 
-const mapDispatchtoProps={
+const mapDispatchtoProps = {
     singelTaskGet,
-    delTask
+    delTask,
+    SingleTaskEdit
 }
 
 
-SingleTask.propTypes={
-    singleTask:PropTypes.object.isRequired,
-    singelTaskGet:PropTypes.func.isRequired,
-    delTask:PropTypes.func.isRequired,
+SingleTask.propTypes = {
+    singleTask: PropTypes.object,
+    singelTaskGet: PropTypes.func.isRequired,
+    delTask: PropTypes.func.isRequired,
 }
 
 
 
-export default connect(mapStateToProps,mapDispatchtoProps)(React.memo(SingleTask));
+
+export default connect(mapStateToProps, mapDispatchtoProps)(SingleTask);

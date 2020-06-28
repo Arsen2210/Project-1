@@ -2,11 +2,10 @@
     margin-top: 50px;
 }
 .heading{
-    color:white;
+    color:rgb(0, 0, 0);
     margin:40px 0px 40px 0px;
 }
 
 .button{
-    margin-bottom:40px;
-    margin-top: 40px;
+    margin:40px 20px 40px 20px;
 }

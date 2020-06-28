@@ -9,7 +9,6 @@ export default function searchTasks(query){
             if(response.error){
                 throw response.error;
             }
-            console.log(response)
             dispatch({type: actionTypes.SEARCH_SUCCESS, tasks: response});
         })
         .catch(error=>{

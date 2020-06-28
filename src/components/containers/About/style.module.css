@@ -1,3 +1,9 @@
 .heading{
-    color:white;
+    color:black;
+    margin-bottom: 40px;
+}
+
+.div{
+    padding-left: 100px;
+    padding-right:100px;
 }

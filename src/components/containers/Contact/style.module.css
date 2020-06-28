@@ -6,14 +6,14 @@
 }
 
 .a{
-    color:white
+    color:black
 }
 
 a{
-    color:white
+    color:black
 }
 
 a:hover{
-    color:rgb(0, 0, 0);
+    color:rgb(17, 0, 255);
     text-decoration: none;
 }

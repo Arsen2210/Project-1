@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import Task from '../../TaskContainer/Task';
 import Search from '../../Search/Search';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import getTasks from '../../../store/actions/gettasks';
 import addTask from '../../../store/actions/addtask';
 import editTask from '../../../store/actions/edittask';
@@ -36,22 +36,22 @@ class ToDo extends PureComponent {
         this.props.getTasks()
     }
 
-    componentDidUpdate(prevProps,newProps){
+    componentDidUpdate(prevProps, newProps) {
         const searchStr = this.props.location.search;
-        if(prevProps.location.search !== searchStr){
+        if (prevProps.location.search !== searchStr) {
             this.props.getTasks(searchStr);
-        } 
+        }
     }
 
     addTask = (taskData) => {
         this.props.addTask(taskData);
-        this.setState({showAddTaskModal: false})
+        this.setState({ showAddTaskModal: false })
     }
 
     removeButtonHandler = (taskId) => () => {
         this.setState({
             showEditTaskModal: false,
-            taskIndex:null
+            taskIndex: null
         });
         this.props.delTask(taskId);
     }
@@ -73,7 +73,7 @@ class ToDo extends PureComponent {
         const { taskIds } = this.state;
         const SelectedtaskIds = Array.from(taskIds);
         this.props.delBulk(SelectedtaskIds);
-        this.setState({taskIds: new Set()})
+        this.setState({ taskIds: new Set() })
     }
 
     handleSaveEdit = (id) => (text) => {
@@ -91,7 +91,7 @@ class ToDo extends PureComponent {
     handleEdit = (taskId) => {
         this.setState({
             showEditTaskModal: true,
-            editTaskIndex: this.props.tasks.findIndex(el=> el.id === taskId),
+            editTaskIndex: this.props.tasks.findIndex(el => el.id === taskId),
         });
     }
 
@@ -116,34 +116,34 @@ class ToDo extends PureComponent {
         });
     }
 
-    toggleTaskModal = (type)=>() => {
+    toggleTaskModal = (type) => () => {
         this.setState({ [`show${type}TaskModal`]: !this.state[`show${type}TaskModal`] });
     };
 
-    editTask = (taskId, taskData)=>{
-        this.props.editTask(taskId,taskData)
+    editTask = (taskId, taskData) => {
+        this.props.editTask(taskId, taskData)
         this.setState({
             showEditTaskModal: false
         });
     };
 
 
-    searchTasks = (data) =>{
+    searchTasks = (data) => {
         let query = '';
 
-        for(let key in data){
-            if(data[key]){
-                query+= `${key}=${data[key]}&`
-            } 
+        for (let key in data) {
+            if (data[key]) {
+                query += `${key}=${data[key]}&`
+            }
         }
-        
+
         this.props.history.push(`/?${query}`);
         this.props.searchTasks(query)
     };
 
     render() {
-        const {taskIds, taskIndex } = this.state;
-        const tasks=this.props.tasks;
+        const { taskIds, taskIndex } = this.state;
+        const tasks = this.props.tasks;
         const tasksArr = tasks.map((task, index) => {
             return (
                 <Col className={classes.col} key={task.id} sm='6' md='4' lg='3' xl='3' >
@@ -167,22 +167,22 @@ class ToDo extends PureComponent {
                 <Container fluid >
                     <Row className={classes.inputRow}>
                         <Col>
-                            <Search 
-                            onSubmit = {this.searchTasks}
+                            <Search
+                                onSubmit={this.searchTasks}
                             />
                             <Button
                                 className={`mx-auto ${classes.addButton}`}
                                 variant='primary'
                                 onClick={this.toggleTaskModal('Add')}
                             >
-                            Add task
+                                Add task
                             </Button>
                         </Col>
                     </Row>
 
 
                     <Row className={classes.addButton}>
-                        {tasksArr.length ? 
+                        {tasksArr.length ?
                             tasksArr :
                             <p>There are no tasks yet!</p>
                         }
@@ -190,7 +190,7 @@ class ToDo extends PureComponent {
 
                     <Row>
                         <Button
-                            className='mx-auto'
+                            className={`mx-auto ${classes.bottombuttons}`}
                             variant='danger'
                             onClick={this.removeBulkHandler}
                             disabled={!taskIds.size}
@@ -200,7 +200,7 @@ class ToDo extends PureComponent {
                         {
                             tasks.length !== taskIds.size &&
                             <Button
-                                className='mx-auto'
+                                className={`mx-auto ${classes.bottombuttons}`}
                                 variant='secondary'
                                 onClick={this.selectAllHandler}
                             >
@@ -211,7 +211,7 @@ class ToDo extends PureComponent {
 
                         {!!taskIds.size &&
                             <Button
-                                className='mx-auto'
+                                className={`mx-auto ${classes.bottombuttons}`}
                                 variant='secondary'
                                 onClick={this.deSelectAllHandler}
                             >
@@ -234,32 +234,32 @@ class ToDo extends PureComponent {
                 }
 
                 <Modal
-                    type = 'add'
+                    type='add'
                     open={this.state.showAddTaskModal}
                     onHide={this.toggleTaskModal('Add')}
                     onAddTask={this.addTask}
                 />
                 <Modal
-                    type = 'edit'
-                    data = {tasks[this.state.editTaskIndex]}
+                    type='edit'
+                    data={tasks[this.state.editTaskIndex]}
                     open={this.state.showEditTaskModal}
                     onHide={this.toggleTaskModal('Edit')}
                     onAddTask={this.addTask}
-                    onEditTask = {this.editTask}
+                    onEditTask={this.editTask}
                 />
-     
+
             </>
         );
     }
 }
- 
-const mapStateToProps=(state)=>{
-    return{
-        tasks:state.tasks
+
+const mapStateToProps = (state) => {
+    return {
+        tasks: state.tasks
     }
 }
 
-const mapDispatchtoProps={
+const mapDispatchtoProps = {
     getTasks,
     addTask,
     editTask,
@@ -268,18 +268,18 @@ const mapDispatchtoProps={
     searchTasks
 }
 
-ToDo.propTypes={
-    tasks:PropTypes.array.isRequired,
-    editTask:PropTypes.func.isRequired,
-    getTasks:PropTypes.func.isRequired,
-    delTask:PropTypes.func.isRequired,
-    delBulk:PropTypes.func.isRequired,
-    searchTasks:PropTypes.func.isRequired,
-    addTask:PropTypes.func.isRequired
+ToDo.propTypes = {
+    tasks: PropTypes.array.isRequired,
+    editTask: PropTypes.func.isRequired,
+    getTasks: PropTypes.func.isRequired,
+    delTask: PropTypes.func.isRequired,
+    delBulk: PropTypes.func.isRequired,
+    searchTasks: PropTypes.func.isRequired,
+    addTask: PropTypes.func.isRequired
 }
 
 
 
 
 
-export default connect(mapStateToProps,mapDispatchtoProps)(React.memo(ToDo));
+export default connect(mapStateToProps, mapDispatchtoProps)(React.memo(ToDo));

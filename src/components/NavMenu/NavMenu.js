@@ -12,7 +12,6 @@ function NavMenu(){
             <li><NavLink activeClassName = {classes.active} exact className={classes.navlink} to="/contact">Contact Us</NavLink></li>
         </ul>
         </nav>
-
     );
 }
 

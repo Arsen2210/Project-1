@@ -22,7 +22,7 @@ function Contact(props){
         props.contact(data);
         change1({name: ''})
         change2({email: ''})
-        change3({message: ''})
+        change3({massage: ''})
     }
     const resetHandler=()=>{
         change1({name:""})

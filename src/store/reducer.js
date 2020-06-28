@@ -3,7 +3,7 @@ import * as actionTypes from './actionTypes'
 
 const defaultState = {
     tasks: [],
-    singleTask: {},
+    singleTask:{},
     loading: false,
     error: null,
     success: null,
@@ -14,7 +14,7 @@ export default function reducer(state = defaultState, action) {
         case actionTypes.GET_TASKS_REQUEST:
             return {
                 ...state,
-                loading: true
+                loading: true,
             };
         case actionTypes.GET_TASKS_SUCCESS:
             return {
@@ -39,7 +39,8 @@ export default function reducer(state = defaultState, action) {
         case actionTypes.ADD_TASK_REQUEST:
             return {
                 ...state,
-                loading: true
+                loading: true,
+                success: null
             };
         case actionTypes.ADD_TASK_FAILURE:
             return {
@@ -67,12 +68,14 @@ export default function reducer(state = defaultState, action) {
             return {
                 ...state,
                 loading: false,
-                error: action.error
+                error: action.error,
+                success: null
             };
         case actionTypes.DEL_TASK_REQUEST:
             return {
                 ...state,
-                loading: true
+                loading: true,
+                success: null
             };
         case actionTypes.DEL_TASK_SUCCESS:
             const newTasks = [...state.tasks].filter(({ id }) => action.taskId !== id);
@@ -91,7 +94,8 @@ export default function reducer(state = defaultState, action) {
         case actionTypes.DEL_BULK_REQUEST:
             return {
                 ...state,
-                loading: true
+                loading: true,
+                success: null
             };
         case actionTypes.DEL_BULK_SUCCESS:
             const taskIds = action.tasksIds
@@ -101,7 +105,7 @@ export default function reducer(state = defaultState, action) {
                 ...state,
                 loading: false,
                 tasks: newTasksArray,
-                success: "Task deleted successfully"
+                success: "Tasks deleted successfully"
             };
         case actionTypes.DEL_BULK_FAILURE:
             return {
@@ -112,7 +116,8 @@ export default function reducer(state = defaultState, action) {
         case actionTypes.CONTACT_REQUEST:
             return {
                 ...state,
-                loading: true
+                loading: true,
+                success: null
             };
         case actionTypes.CONTACT_SUCCESS:
             return {
@@ -129,7 +134,8 @@ export default function reducer(state = defaultState, action) {
         case actionTypes.SINGLETASK_REQUEST:
             return {
                 ...state,
-                loading: true
+                loading: true,
+                success: null
             };
         case actionTypes.SINGLETASK_SUCCESS:
             return {
@@ -146,7 +152,8 @@ export default function reducer(state = defaultState, action) {
         case actionTypes.SEARCH_REQUEST:
             return {
                 ...state,
-                loading: true
+                loading: true,
+                success: null
             };
         case actionTypes.SEARCH_SUCCESS:
             return {
@@ -160,6 +167,26 @@ export default function reducer(state = defaultState, action) {
                 loading: false,
                 error: action.error
             }
+        case actionTypes.EDIT_SINGLETASK_FAILURE:
+            return {
+                ...state,
+                loading: false,
+                error: action.error
+            };
+        case actionTypes.EDIT_SINGLETASK_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                singleTask: action.taskData,
+                success: "Task edited successfully"
+            };
+        case actionTypes.EDIT_SINGLETASKS_REQUEST:
+            return {
+                ...state,
+                loading: false,
+                error: action.error,
+                success: null
+            };
 
 
         default: return state;
