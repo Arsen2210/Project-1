@@ -1,38 +1,42 @@
-import React, { Component } from 'react';
+import React,{useState} from 'react';
 import classes from './style.module.css';
 import { Button, Container, Row, Col, Form } from 'react-bootstrap';
 import { nameValidator, emailValidator } from '../../../Tools/validator';
 import { connect } from 'react-redux';
-import contact from '../../../store/actions/contact'
+import contact from '../../../store/actions/contact';
 
-class Contact extends Component {
-    state = {
-        name: '',
-        email: '',
-        message: ''
+function Contact(props){
+    const state1=useState({name: ''})
+    const change1=state1[1]
+    const state2=useState({email: ''})
+    const change2=state2[1]
+    const state3=useState({message: ''})
+    const change3=state3[1]
+    const submitHandler = () => {
+        const data={
+            name:state1[0].name,
+            email:state2[0].email,
+            massage:state3[0].massage
+        }
+        props.contact(data);
+        change1({name: ''})
+        change2({email: ''})
+        change3({message: ''})
     }
-
-
-    submitHandler = () => {
-        this.props.contact(this.state);
-        this.setState({
-            name: '',
-            email: '',
-            message: ''
-        })
-
+    const nameInputChangeHandler=(event)=>{
+        change1({name:event.target.value})
     }
-
-    inputChangeHandler = (type) => (event) => {
-        this.setState({
-            [type]: event.target.value
-        });
+    const emailInputChangeHandler=(event)=>{
+        change2({email:event.target.value})
     }
-
-    render() {
-        const { name, email, message } = this.state;
-        const isNameValid = nameValidator(name);
-        const isEmailValid = emailValidator(email);
+    const massageInputChangeHandler=(event)=>{
+        change3({massage:event.target.value})
+    }
+    const  name=state1[0].name
+    const  email=state2[0].email
+    const  message=state3[0].massage
+    const isNameValid = nameValidator(name);
+    const isEmailValid = emailValidator(email);
 
 
         return (
@@ -46,7 +50,7 @@ class Contact extends Component {
                                     value={name}
                                     className={!isNameValid ? classes.invalid : ''}
                                     type='text'
-                                    onChange={this.inputChangeHandler('name')}
+                                    onChange={nameInputChangeHandler}
                                 />
                             </Form.Group>
 
@@ -57,7 +61,7 @@ class Contact extends Component {
                                     value={email}
                                     className={!isEmailValid ? classes.invalid : ''}
                                     placeholder="name@example.com"
-                                    onChange={this.inputChangeHandler('email')}
+                                    onChange={emailInputChangeHandler}
                                 />
                             </Form.Group>
 
@@ -67,12 +71,12 @@ class Contact extends Component {
                                     as="textarea"
                                     rows="3"
                                     value={message}
-                                    onChange={this.inputChangeHandler('message')}
+                                    onChange={massageInputChangeHandler}
                                 />
                             </Form.Group>
                             <Button
                                 variant="outline-primary"
-                                onClick={this.submitHandler}
+                                onClick={submitHandler}
                                 disabled={!(isNameValid && isEmailValid)}
                             >
                                 Submit
@@ -86,7 +90,6 @@ class Contact extends Component {
 
         );
     }
-}
 
 
 const mapDispatchtoProps = {
