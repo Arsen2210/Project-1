@@ -117,7 +117,7 @@ const mapDispatchtoProps = {
 
 
 SingleTask.propTypes = {
-    singleTask: PropTypes.object,
+    singleTask: PropTypes.object.isRequired,
     singelTaskGet: PropTypes.func.isRequired,
     delTask: PropTypes.func.isRequired,
 }
