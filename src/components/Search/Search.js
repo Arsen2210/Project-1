@@ -1,5 +1,5 @@
 import React,{PureComponent} from 'react';
-import { Button, FormControl, Dropdown, Form, NavDropdown, Navbar, Nav } from 'react-bootstrap';
+import { Button, FormControl, Dropdown, Form, NavDropdown, Navbar, Nav,InputGroup } from 'react-bootstrap';
 import classes from './style.module.css';
 import PropTypes from 'prop-types';
 
@@ -118,7 +118,14 @@ class Search extends PureComponent {
         return (
             <>
                 <Navbar bg="light" expand="lg" className={classes.navbar}>
-                    <Navbar.Brand href="#">Go for search</Navbar.Brand>
+                    <Navbar.Brand href="#">
+                    <Form inline>
+                        <InputGroup className="mb-10">
+                            <FormControl type="text" placeholder="Search" className="mr-sm-4" value={search} onChange={this.inputChangeHandler} />
+                            <Button variant="outline-primary" onClick={this.submitHandler} >Search</Button>
+                        </InputGroup>
+                    </Form>
+                    </Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="mr-auto">
@@ -133,7 +140,7 @@ class Search extends PureComponent {
                                     </Dropdown.Item>)
                                 }
                             </NavDropdown>
-                            <NavDropdown title={filterTitle || 'Filter'} className={classes.navButton} id="basic-nav-dropdown">
+                            <NavDropdown title={filterTitle || 'Filter'} className={classes.navButtonFilter} id="basic-nav-dropdown">
                                 {this.filter.map(({ id, title }) =>
                                     <Dropdown.Item
                                         key={id}
@@ -147,10 +154,6 @@ class Search extends PureComponent {
                             <input disabled={!filterTitle} className={classes.dataInput} type="date" value={date} onChange={this.dateChangeHandler} />
                             <Nav.Link className={classes.navButton} onClick={() => this.submitHandler('reset')}>Reset</Nav.Link>
                         </Nav>
-                        <Form inline>
-                            <FormControl type="text" placeholder="Search" className="mr-sm-2" value={search} onChange={this.inputChangeHandler} />
-                            <Button variant="outline-primary" onClick={this.submitHandler} >Search</Button>
-                        </Form>
                     </Navbar.Collapse>
                 </Navbar>
             </>

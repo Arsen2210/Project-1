@@ -3,6 +3,10 @@
     }
 .sortItem:hover {
     background-color:#d3d3d3;
+    margin:auto
+}
+.sortItem{
+    margin:auto
 }
 .navButton{
     margin-left: 20px;
@@ -12,7 +16,26 @@
 }
 .dataInput{
     border-color:#d3d3d3;
+    height: 40px;
+    width: 180px;
+    margin:auto;
     color:#858585;
-    margin-left:20px;
     border-radius: 10px;
+}
+.navButtonFilter{
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+@media only screen and (max-width:991px) {
+    .dataInput{
+        margin-top: 20px;
+        margin-bottom: 5px;
+    }
+    .navButtonFilter{
+       margin: auto;
+    }
+    .navButton{
+        margin:auto;
+    }
 }

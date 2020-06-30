@@ -4,6 +4,7 @@ import { request } from '../../Tools/request'
 
 export default function contact(data){
     return (dispatch) => {
+        console.log(data)
         dispatch({type: actionTypes.CONTACT_REQUEST});
         request.post(`/contact`,data)
         .then(response => {

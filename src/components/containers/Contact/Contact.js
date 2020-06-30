@@ -17,17 +17,17 @@ function Contact(props){
         const data={
             name:state1[0].name,
             email:state2[0].email,
-            massage:state3[0].massage
+            message:state3[0].message
         }
         props.contact(data);
         change1({name: ''})
         change2({email: ''})
-        change3({massage: ''})
+        change3({message: ''})
     }
     const resetHandler=()=>{
         change1({name:""})
         change2({email:""})
-        change3({massage:""})
+        change3({message:""})
     }
     const nameInputChangeHandler=(event)=>{
         change1({name:event.target.value})
@@ -35,12 +35,12 @@ function Contact(props){
     const emailInputChangeHandler=(event)=>{
         change2({email:event.target.value})
     }
-    const massageInputChangeHandler=(event)=>{
-        change3({massage:event.target.value})
+    const messageInputChangeHandler=(event)=>{
+        change3({message:event.target.value})
     }
     const  name=state1[0].name
     const  email=state2[0].email
-    const  message=state3[0].massage
+    const  message=state3[0].message
     const isNameValid = nameValidator(name);
     const isEmailValid = emailValidator(email);
 
@@ -77,7 +77,7 @@ function Contact(props){
                                     as="textarea"
                                     rows="3"
                                     value={message}
-                                    onChange={massageInputChangeHandler}
+                                    onChange={messageInputChangeHandler}
                                 />
                             </Form.Group>
                             <Button
